@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTasks, saveTasks } = require('../data/store');
+const Task = require('../models/Task');
 
 const router = express.Router();
 
@@ -13,28 +13,25 @@ const validateTask = (req, res, next) => {
     if (title !== undefined && (typeof title !== 'string' || title.trim() === '')) {
         return res.status(400).json({ error: 'Title must be a non-empty string' });
     }
-    
     if (priority !== undefined && !VALID_PRIORITIES.includes(priority)) {
         return res.status(400).json({ error: `Priority must be one of: ${VALID_PRIORITIES.join(', ')}` });
     }
-    
     if (category !== undefined && !VALID_CATEGORIES.includes(category)) {
         return res.status(400).json({ error: `Category must be one of: ${VALID_CATEGORIES.join(', ')}` });
     }
-    
     next();
 };
 
-// GET all tasks (with optional search query)
+// GET all tasks
 router.get('/', async (req, res) => {
     const { search } = req.query;
     try {
-        let tasks = await getTasks();
+        let query = {};
         if (search) {
-            tasks = tasks.filter(task => 
-                task.title.toLowerCase().includes(search.toLowerCase())
-            );
+            query.title = { $regex: search, $options: 'i' };
         }
+        // Sort by creation date descending to match original behavior
+        const tasks = await Task.find(query).sort({ createdAt: -1 });
         res.json(tasks);
     } catch (error) {
         res.status(500).json({ error: 'Failed to fetch tasks' });
@@ -45,60 +42,34 @@ router.get('/', async (req, res) => {
 router.post('/', validateTask, async (req, res) => {
     const { title, description, dueDate, priority, category } = req.body;
     
-    if (!title) {
-        return res.status(400).json({ error: 'Title is required' });
-    }
+    if (!title) return res.status(400).json({ error: 'Title is required' });
 
     try {
-        const tasks = await getTasks();
-        const newTask = {
-            id: Date.now().toString(), 
+        const newTask = await Task.create({
             title: title.trim(),
             description: description ? String(description).trim() : '',
             dueDate: dueDate || null,
             priority: priority || 'Low',
-            category: category || 'General',
-            completed: false,
-            createdAt: new Date().toISOString()
-        };
-        
-        tasks.push(newTask);
-        await saveTasks(tasks);
-        
+            category: category || 'General'
+        });
         res.status(201).json(newTask);
     } catch (error) {
         res.status(500).json({ error: 'Failed to create task' });
     }
 });
 
-// PUT update an existing task
+// PUT update a task
 router.put('/:id', validateTask, async (req, res) => {
     const { id } = req.params;
-    const { title, description, dueDate, completed, priority, category } = req.body;
-
+    
     try {
-        const tasks = await getTasks();
-        const taskIndex = tasks.findIndex(t => t.id === id);
+        const updatedTask = await Task.findByIdAndUpdate(
+            id,
+            { $set: req.body },
+            { new: true, runValidators: true }
+        );
         
-        if (taskIndex === -1) {
-            return res.status(404).json({ error: 'Task not found' });
-        }
-
-        const currentTask = tasks[taskIndex];
-        
-        const updatedTask = {
-            ...currentTask,
-            title: title !== undefined ? title.trim() : currentTask.title,
-            description: description !== undefined ? String(description).trim() : currentTask.description,
-            dueDate: dueDate !== undefined ? dueDate : currentTask.dueDate,
-            completed: completed !== undefined ? Boolean(completed) : currentTask.completed,
-            priority: priority !== undefined ? priority : currentTask.priority,
-            category: category !== undefined ? category : currentTask.category
-        };
-
-        tasks[taskIndex] = updatedTask;
-        await saveTasks(tasks);
-        
+        if (!updatedTask) return res.status(404).json({ error: 'Task not found' });
         res.json(updatedTask);
     } catch (error) {
         res.status(500).json({ error: 'Failed to update task' });
@@ -110,14 +81,8 @@ router.delete('/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        const tasks = await getTasks();
-        const filteredTasks = tasks.filter(t => t.id !== id);
-        
-        if (tasks.length === filteredTasks.length) {
-            return res.status(404).json({ error: 'Task not found' });
-        }
-
-        await saveTasks(filteredTasks);
+        const deletedTask = await Task.findByIdAndDelete(id);
+        if (!deletedTask) return res.status(404).json({ error: 'Task not found' });
         res.status(204).send();
     } catch (error) {
         res.status(500).json({ error: 'Failed to delete task' });

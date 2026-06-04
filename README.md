@@ -22,7 +22,7 @@ This project is a full-stack web application built for the **Exercise 1: Persona
 
 ### Backend
 - **Node.js & Express**: Chosen for its lightweight, unopinionated approach to building RESTful APIs.
-- **fs.promises (Local JSON)**: Used `tasks.json` as the database to satisfy the local persistence requirement without forcing the reviewer to configure PostgreSQL or MongoDB.
+- **MongoDB Atlas & Mongoose**: Used as the primary cloud database to ensure robust, persistent data storage (especially important for deploying to free hosting platforms with ephemeral disks).
 - **cors**: Required to allow the frontend and backend to communicate across different local ports.
 
 ---
@@ -150,10 +150,9 @@ Personal Task Manager/
 While this project is feature-complete for the assignment, there are a few things I chose not to do, and a few things I would build next if I had more time:
 
 ### What I Chose Not to Do
-- **Real Database Integration**: I chose to use a local `tasks.json` file instead of PostgreSQL or MongoDB. This ensures the app is incredibly easy for reviewers to clone and run immediately without needing to set up a database instance or environment variables.
-- **Drag-and-Drop Backend Sync**: Users can reorder tasks visually on the frontend using drag-and-drop, but this custom order isn't saved to the backend database. Refreshing resets the drag-and-drop order. I chose to focus my time on Custom Hooks, Component Testing, and Accessibility instead.
+- **Local JSON Storage**: While the assignment permitted a local JSON file, I chose to upgrade to a cloud-hosted MongoDB Atlas cluster. This ensures that data persists reliably when deploying the Node API to free hosting platforms with ephemeral filesystems (like Render).
+- **Drag-and-Drop Backend Sync**: Users can reorder tasks visually on the frontend using drag-and-drop, but this custom order isn't saved to the backend database. Refreshing resets the drag-and-drop order. I chose to focus my time on Custom Hooks, Component Testing, and Cloud Database integration instead.
 
 ### What I Would Build Next
 1. **User Authentication**: Implement JWT-based auth (e.g., using Auth0 or Passport) so multiple users can register and securely manage their own private task lists.
-2. **Database Migration**: Migrate from the local JSON file to PostgreSQL using Prisma ORM for scalable data management and robust querying.
-3. **Global State & Caching**: As the app scales, I would introduce React Query to handle aggressive client-side caching, background fetching, and pagination to optimize performance.
+2. **Global State & Caching**: As the app scales, I would introduce React Query to handle aggressive client-side caching, background fetching, and pagination to optimize performance.
