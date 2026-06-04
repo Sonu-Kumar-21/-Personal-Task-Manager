@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1780535889566",
+    "title": "Maths Practice ",
+    "description": "PYQ of cgl",
+    "dueDate": "2026-06-04",
+    "completed": true,
+    "createdAt": "2026-06-04T01:18:09.566Z"
+  },
+  {
+    "id": "1780535996673",
+    "title": "ENGLISH ",
+    "description": "PYQ PRACTICE",
+    "dueDate": "2026-06-01",
+    "completed": true,
+    "createdAt": "2026-06-04T01:19:56.673Z"
+  },
+  {
+    "id": "1780536851760",
+    "title": "Practice",
+    "description": "",
+    "dueDate": "2026-06-03",
+    "priority": "Medium",
+    "category": "Personal",
+    "completed": true,
+    "createdAt": "2026-06-04T01:34:11.760Z"
+  }
+]
