@@ -12,6 +12,11 @@ app.use(express.json());
 
 app.use('/api/tasks', taskRoutes);
 
+// Root route to prevent "Cannot GET /" confusion
+app.get('/', (req, res) => {
+    res.send('✅ Task Manager Backend API is running perfectly!');
+});
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
