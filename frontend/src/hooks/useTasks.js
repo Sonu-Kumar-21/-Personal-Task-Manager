@@ -1,7 +1,9 @@
 import { useState, useCallback } from 'react';
 import { arrayMove } from '@dnd-kit/sortable';
 
-const API_URL = 'http://localhost:5000/api/tasks';
+const API_URL = import.meta.env.MODE === 'production' 
+  ? 'https://personal-task-manager-7ork.onrender.com/api/tasks' 
+  : 'http://localhost:5000/api/tasks';
 
 export function useTasks() {
   const [tasks, setTasks] = useState([]);
