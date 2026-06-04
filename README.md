@@ -1,16 +1,11 @@
 # Personal Task Manager 🚀
 
-🔗 **[Live Frontend Demo (Netlify)](https://task-manager-sonu.netlify.app/)**
-🔗 **[Live Backend API (Render)](https://personal-task-manager-7ork.onrender.com/api/tasks)**
-
-This project is a full-stack web application built for the **Exercise 1: Personal Task Manager** assignment. It allows users to create, view, update, prioritize, categorize, and delete personal tasks. The app features a premium glassmorphic UI, dynamic sorting, and drag-and-drop reordering, all backed by a robust REST API and automated testing.
+This project is a full-stack web application built for the ** Personal Task Manager**. It allows users to create, view, update, prioritize, categorize, and delete personal tasks. The app features a premium glassmorphic UI, dynamic sorting, and drag-and-drop reordering, all backed by a robust REST API and automated testing.
 
 ## Live Demo Links
 
-- **Frontend Deployment**: [Insert Vercel/Netlify Link Here]
-- **Backend Deployment**: [Insert Render/Railway Link Here]
-
-*(Note to reviewer: If deployed links are missing, please rely on the local setup instructions below).*
+- **Frontend Deployment**: [https://task-manager-sonu.netlify.app/]
+- **Backend Deployment**: [https://personal-task-manager-7ork.onrender.com/api/tasks]
 
 ---
 
